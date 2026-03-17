@@ -1,8 +1,7 @@
 module.exports = {
   blinkcarbon: {
     smtp: {
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
+      api: process.env.SMTP_API,
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
@@ -10,8 +9,7 @@ module.exports = {
   },
   arham: {
     smtp: {
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
+      api: process.env.SMTP_API,
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },

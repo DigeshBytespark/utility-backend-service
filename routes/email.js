@@ -6,7 +6,7 @@ const { sendEmail } = require("../services/mailService");
 router.post("/send-email", async (req, res) => {
   const { project, from, to, subject, html, pdf } = req.body || {};
 
-  // Basic validation
+  // Validation
   if (!project || !from || !to || !subject || !html) {
     return res.status(400).json({
       success: false,
@@ -14,8 +14,8 @@ router.post("/send-email", async (req, res) => {
     });
   }
 
-  // Check project exists in config
   const config = projects[project];
+
   if (!config) {
     return res.status(400).json({
       success: false,
@@ -24,17 +24,25 @@ router.post("/send-email", async (req, res) => {
   }
 
   try {
-    const info = await sendEmail(config.smtp, { from, to, subject, html, pdf });
+    const result = await sendEmail(config.smtp, {
+      from,
+      to,
+      subject,
+      html,
+      pdf,
+    });
+
     res.json({
       success: true,
       message: "Email sent successfully",
-      messageId: info.messageId || null,
+      messageId: result.messageId || null,
     });
   } catch (error) {
-    console.error("Email sending failed:", error);
+    console.error("Email sending failed:", error?.response?.data || error);
+
     res.status(500).json({
       success: false,
-      message: error.message || "Email sending failed",
+      message: error?.response?.data?.message || error.message,
     });
   }
 });
