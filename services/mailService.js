@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const sendEmail = async (smtpConfig, { from, to, subject, html, pdf }) => {
   const senderEmail = smtpConfig.user;   // your verified Brevo email
-  const apiKey = smtpConfig.api;         // BREVO API KEY
+  const apiKey = process.env.SMTP_API;       // BREVO API KEY
 
   const payload = {
     sender: {
