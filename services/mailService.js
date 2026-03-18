@@ -1,14 +1,19 @@
 const axios = require("axios");
 
 const sendEmail = async (smtpConfig, { from, to, subject, html, pdf }) => {
-  const senderEmail = smtpConfig.user;   // your verified Brevo email
-  const apiKey = smtpConfig.api;        // BREVO API KEY
+  const apiKey = smtpConfig.api;
 
   const payload = {
     sender: {
-      email: senderEmail,
-      name: from?.split("<")[0]?.trim() || "No Reply",
+      email: smtpConfig.sender,   // ✅ project-based sender
+      name: smtpConfig.name || from?.split("<")[0]?.trim() || "No Reply",
     },
+
+    // ✅ reply-to support
+    replyTo: smtpConfig.replyTo
+      ? { email: smtpConfig.replyTo }
+      : undefined,
+
     to: [{ email: to }],
     subject,
     htmlContent: html,
@@ -18,7 +23,7 @@ const sendEmail = async (smtpConfig, { from, to, subject, html, pdf }) => {
   if (pdf) {
     payload.attachment = [
       {
-        content: pdf, // base64 string
+        content: pdf,
         name: "Carbon Credit Estimation Report.pdf",
       },
     ];
@@ -35,6 +40,7 @@ const sendEmail = async (smtpConfig, { from, to, subject, html, pdf }) => {
     }
   );
 
+  console.log("BREVO RESPONSE:", response.data);
   return response.data;
 };
 
